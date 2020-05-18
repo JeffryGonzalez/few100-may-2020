@@ -18,7 +18,7 @@ describe('types in typescript', () => {
             expect(typeof x).toBe('object');
         });
         it('implicity typing', () => {
-            let name = 'Jeff'; // initialized to a string AND the value 'Jeff'
+            const name = 'Jeff'; // initialized to a string AND the value 'Jeff'
 
             let age;
             age = 51;
@@ -55,7 +55,7 @@ describe('types in typescript', () => {
             movie.yearReleased = 1977;
 
             interface Movie { title: string; yearReleased: number; director: string };
-            interface Song { title: string, yearOfProduction: number, singer: string };
+            interface Song { title: string; yearOfProduction: number; singer: string };
             let art: Movie | Song;
 
             art = {
@@ -69,6 +69,68 @@ describe('types in typescript', () => {
                 yearOfProduction: 1993,
                 singer: 'Fugazi'
             };
+
+        });
+
+        it('has var but it is bad and you are a bad person if you use it.', () => {
+            const age = 22;
+
+            if (age > 21) {
+                // tslint:disable-next-line: no-var-keyword
+                var message = 'Old enough';
+            } else {
+                // tslint:disable-next-line: no-var-keyword
+                var message = 'Too Young';
+            }
+
+            expect(message).toBe('Old enough');
+
+            const title = 'King of Scotland';
+
+
+        });
+    });
+
+    describe('literals in TypeScript', () => {
+
+        it('has string literals', () => {
+            const n1 = 'Bob';
+            // tslint:disable-next-line: quotemark
+            const n2 = "Bob";
+
+            expect(n1).toEqual(n2);
+
+            // tslint:disable-next-line: quotemark
+            const someHtml = "<h1 class=\"pretty\">Hello</h1>";
+
+        });
+        it('has template strings', () => {
+
+            const n1 = `Bob`;
+            const n2 = `Bob`;
+            expect(n1).toEqual(n2);
+
+            const story = `Chapter 1
+
+I was born at midnight in Akron.
+
+It was all downhill from there.
+
+the end`;
+            console.log(story);
+
+            // concatenating strings in JS/TS
+
+            const name = 'Joe';
+            const age = 51;
+            const job = 'DEV';
+
+            const description1 = 'The name is ' + name + ' and ' + name + ' is ' + age + ' and works as a ' + job;
+            expect(description1).toBe('The name is Joe and Joe is 51 and works as a DEV');
+
+            const description2 = `The name is ${name} and ${name} is ${age} and works as a ${job}`;
+            expect(description2).toBe('The name is Joe and Joe is 51 and works as a DEV');
+
 
         });
     });
