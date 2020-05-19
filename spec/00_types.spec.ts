@@ -130,6 +130,62 @@ the end`;
 
             const description2 = `The name is ${name} and ${name} is ${age} and works as a ${job}`;
             expect(description2).toBe('The name is Joe and Joe is 51 and works as a DEV');
+        });
+
+        it('has various ways to express numeric literals', () => {
+
+            let age: number;
+            age = 51;
+
+            const n2 = 1.2;
+            const n3 = 0xff; // Base 16 (Hex)
+            const n4 = 0b010101; // base 2 (binary)
+            const n5 = 0o23; // Base 8.
+            const reallyBigNumber = 1_000_382;
+
+            expect(reallyBigNumber).toBe(1000382);
+
+            const combination = [23, 32, 18];
+            expect(combination).toEqual([23, 32, 18]);
+
+            const movie = { title: 'Jaws', director: 'Spielberg' };
+            expect(movie).toEqual({ title: 'Jaws', director: 'Spielberg' });
+
+        });
+    });
+    describe('arrays and array literals', () => {
+
+        it('has two ways to declare an array', () => {
+
+            let stuff: (number | string)[];
+            stuff = ['dog', 'cat', 'mouse', 99];
+            expect(stuff[0]).toBe('dog');
+            expect(stuff[999]).toBeUndefined();
+            // stuff = 99;
+
+            let otherStuff: Array<number | string>;
+            otherStuff = [1, 'bird', 99];
+        });
+
+        it('has array destructuring and a rest operator', () => {
+            const friends = ['sean', 'amy', 'david', 'henry'];
+
+            // const friend1 = friends[0];
+            // const friend3 = friends[2];
+            const [friend1, , friend3] = friends;
+
+            expect(friend1).toBe('sean');
+            expect(friend3).toBe('david');
+
+            const [first, ...allTheOthers] = friends;
+
+            // the rest operator
+            expect(first).toBe('sean');
+            expect(allTheOthers).toEqual(['amy', 'david', 'henry']);
+
+            const newFriends = ['billy', ...friends, 'violet'];
+
+            expect(newFriends).toEqual(['billy', 'sean', 'amy', 'david', 'henry', 'violet']);
 
 
         });
