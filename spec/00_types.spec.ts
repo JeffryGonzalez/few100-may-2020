@@ -177,18 +177,115 @@ the end`;
             expect(friend1).toBe('sean');
             expect(friend3).toBe('david');
 
-            const [first, ...allTheOthers] = friends;
+            const [first, ...rest] = friends;
 
             // the rest operator
             expect(first).toBe('sean');
-            expect(allTheOthers).toEqual(['amy', 'david', 'henry']);
+            expect(rest).toEqual(['amy', 'david', 'henry']);
 
             const newFriends = ['billy', ...friends, 'violet'];
 
             expect(newFriends).toEqual(['billy', 'sean', 'amy', 'david', 'henry', 'violet']);
 
+            function addThemAll(n1: number, n2: number, ...numbers: number[]) {
+                return numbers.reduce((s, n) => s + n, n1 + n2); // magic that adds up numbers.
+            }
+
+            // expect(addThemAll(1)).toBe(1);
+            expect(addThemAll(2, 2)).toBe(4);
+            expect(addThemAll(1, 2, 3, 4, 5, 6, 7, 8, 9)).toBe(45);
+        });
+        it('tuples', () => {
+            // typed arrays
+            const stuff: [string, number, string] = ['Cat', 13, 'Dog'];
+
+            const first = stuff[0];
+            const second = stuff[1];
+
+            type QuoteMarkRule = [boolean, 'single' | 'double'];
+
+            const myQuoteRule: QuoteMarkRule = [true, 'double'];
+            if (myQuoteRule[0]) {
+                console.log(`You are enforcing quote marks and using ${myQuoteRule[1]} quotes`);
+            }
 
         });
+
+        describe('a practical example of what you might use a tuple for (but probably would not)', () => {
+            it('an oop approach', () => {
+
+                // string FormatName(string first, string last)
+                interface FormattedName { formattedName: string; numberOfLettersInName: number; }
+                function formatName(first: string, last: string): FormattedName {
+                    const formattedName = `${last}, ${first}`
+                    return {
+                        formattedName,
+                        numberOfLettersInName: formattedName.length
+                    }
+                }
+
+                function formatNameCasually(first: string, last: string): FormattedName {
+                    const formattedName = `${first} ${last}`;
+                    return {
+                        formattedName,
+                        numberOfLettersInName: formattedName.length
+                    }
+                }
+
+                const result = formatName('Han', 'Solo');
+                expect(result.formattedName).toBe('Solo, Han');
+                expect(result.numberOfLettersInName).toBe(9);
+                // const result2 = formatNameCasually('Luke', 'Skywalker');
+                // expect(result2.formattedName).toBe('Luke Skywalker');
+
+                const { formattedName: n } = formatNameCasually('Luke', 'Skywalker');
+                expect(n).toBe('Luke Skywalker');
+            });
+            it('if that wasn\'t confusing enough, here is tuples', () => {
+
+                function formatName(first: string, last: string): [string, number] {
+                    const formattedName = `${last}, ${first}`;
+                    return [formattedName, formattedName.length]
+                }
+
+                const results = formatName('Han', 'Solo');
+                expect(results[0]).toBe('Solo, Han');
+                expect(results[1]).toBe(9);
+
+
+                // but wait! We have destructuring
+
+                const [fullName] = formatName('Luke', 'Skywalker');
+                expect(fullName).toBe('Skywalker, Luke');
+
+
+                const someStuff: (string | number)[] = ['cat', 'dog', 99, 138, 'pizza']; // this is an array
+                const someTuple: [string, string, number, string[]] =
+                    ['cat', 'cat', 99, ['bird', 'mouse']]; // this is a typed array (tuple)
+
+            });
+
+        });
+    });
+    describe('object literals and interface', () => {
+        it('destructuring an object', () => {
+            const movie = { title: 'A New Hope', director: 'Lucas', yearReleased: 1977 };
+
+            // Old Skool
+            const t1 = movie.title;
+            const y1 = movie.yearReleased;
+            expect(t1).toBe('A New Hope');
+            expect(y1).toBe(1977);
+
+            // new Skool
+
+            const { title: t2, yearReleased: y2 } = movie;
+
+            expect(t2).toBe('A New Hope');
+            expect(y2).toBe(1977);
+
+        });
+
     });
 
 });
