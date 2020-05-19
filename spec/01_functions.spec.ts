@@ -180,3 +180,14 @@ describe('array methods', () => {
     });
 
 });
+
+// TODO:
+// Fix that IsEven thing (make a module)
+// Do a couple of examples of combining together operators (map, filter, reduce, etc.)
+// Do a little more with classes and
+// Modules:
+//   Barrels
+//   import * from
+
+// Build an app that runs in the browser sans angular
+// Build the app again WITH angular.
