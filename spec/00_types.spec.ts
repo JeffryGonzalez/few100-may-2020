@@ -285,8 +285,128 @@ the end`;
             expect(y2).toBe(1977);
 
         });
+        it('anonymous types are implicity defined by an interface', () => {
+            const thor: any = {
+                title: 'Thor: Ragnarok',
+                director: 'Taika Waititi',
+                yearReleased: 2017
+            };
+
+            thor.title = 'Thor Ragnorok';
+            expect(thor.title).toBe('Thor Ragnorok');
+            // tslint:disable-next-line: no-string-literal
+            expect(thor['title']).toBe('Thor Ragnorok');
+            thor.yearreleased = 2017;
+            thor.nicehair = true;
+
+        });
+        it('you can make extensible objects', () => {
+            interface Book {
+                title: string;
+                author: { firstName: string, lastName: string };
+                numberOfPages: number;
+                publisher?: string;
+            }
+
+            const highWeirdness: Book = {
+                title: 'High Weirdness',
+                author: {
+                    firstName: 'Erik',
+                    lastName: 'Davis'
+                },
+                numberOfPages: 545
+            };
+
+            expect(highWeirdness.author.lastName).toBe('Davis');
+
+            const theBrokeHorses: Book = {
+                title: 'The Broke Horses',
+                author: { firstName: 'Jannette', lastName: 'Walls' },
+                numberOfPages: 265,
+                publisher: 'Penguin'
+            }
+
+            function doSomethingWithABook(book: Book): string {
+                let result = `Book ${book.title} by ${book.author.lastName} has ${book.numberOfPages}`;
+                if (book.publisher) {
+                    result += ` and was published by ${book.publisher}`;
+                }
+                return result;
+            }
+
+        });
+        it('truth table', () => {
+            expect('').toBeFalsy(); // empty strings are false
+            expect('tacos').toBeTruthy(); // any other strings are true
+            expect(0).toBeFalsy(); // any string other than zero is truthy
+            expect(1).toBeTruthy();
+            expect(-1).toBeTruthy();
+            expect(undefined).toBeFalsy();
+            expect(null).toBeFalsy();
+            expect(NaN).toBeFalsy(); // Not a number. like if you try to subtract a 'cat' from 10.
+
+        });
 
     });
 
+    it('has duck typing (aka structural typing)', () => {
+        interface MessageHaver { message: string }
+        function logMessage(item: MessageHaver) {
+            console.log(`At ${new Date().toLocaleTimeString()} you got the message ${item.message}`);
+        }
+
+        logMessage({ message: 'Call your mom' });
+
+        const phoneCall = {
+            from: 'Jenny',
+            number: '867-5309',
+            message: 'For a good time...'
+        };
+
+        logMessage(phoneCall);
+    });
+
+    it('a weird way to make an expando object', () => {
+        interface AtLeastHasAMessage {
+            message: string;
+            [key: string]: any; // can have any other properties.
+        }
+
+
+        const phoneCall: AtLeastHasAMessage = {
+            message: 'Call your mom',
+            from: 'Your Mom',
+            time: 'Noon',
+            number: '999-999-9999'
+        }
+        // expect(phoneCall['number']).toBe('999-999-9999');
+
+        // 'Dictionary'
+        // Dictionary<string, int> bowlingScores;
+        // bowlingScores['craig'] = 127;
+        // bowlingScores['joe'] = 288;
+
+        interface BowlingScores {
+            [key: string]: number;
+        }
+
+        interface Dictionary<T> {
+            [key: string]: T
+        }
+        const scores: Dictionary<number> = {
+            craig: 127,
+            joe: 288,
+            'mary ann': 300
+        }
+        expect(scores.craig).toBe(127);
+        expect(scores['mary ann']).toBe(300);
+        scores['jimmy jo bob'] = 145;
+
+        const nickNames: Dictionary<string> = {
+            bill: 'Billarama!',
+            kevin: 'kev'
+        }
+        expect(nickNames['kevin']).toBe('kev');
+    });
 });
 
