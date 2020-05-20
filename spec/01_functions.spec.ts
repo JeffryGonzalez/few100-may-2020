@@ -1,3 +1,5 @@
+import { isEven } from '../src/utils';
+
 describe('functions', () => {
 
     describe('how to declare them', () => {
@@ -144,7 +146,7 @@ describe('array methods', () => {
     describe('array methods that return a new array', () => {
 
         it('can return only methods that pass a predicate', () => {
-            const isEven = (n: number): boolean => n % 2 === 0;
+
             const evens = numbers.filter(isEven); // Where
 
             expect(evens).toEqual([2, 4, 6, 8]);
@@ -163,10 +165,10 @@ describe('array methods', () => {
     describe('array methods that return a single (scalar) value', () => {
 
         it('testing the members of an array', () => {
-            const allEven = numbers.every(n => n % 2 === 0); // Linq All
+            const allEven = numbers.every(isEven); // Linq All
             expect(allEven).toBe(false);
 
-            const anyEven = numbers.some(n => n % 2 === 0); // Linq Any
+            const anyEven = numbers.some(isEven); // Linq Any
             expect(anyEven).toBe(true);
         });
 
@@ -180,10 +182,106 @@ describe('array methods', () => {
     });
 
 });
+describe('a couple of practices', () => {
+    describe('shopping cart', () => {
+        it('the practice', () => {
+            interface CartItem {
+                name: string;
+                qty: number;
+                price: number;
+            }
+
+            const cart: CartItem[] = [
+                { name: 'Eggs', qty: 1, price: 2.99 },
+                { name: 'Bread', qty: 3, price: 3.57 },
+                { name: 'Shampoo', qty: 2, price: 7.25 }
+            ];
+
+            interface Bill {
+                totalQty: number;
+                totalPrice: number;
+            }
+
+            // I might cheat here a bit to make it more readable.
+            const initialState: Bill = {
+                totalQty: 0,
+                totalPrice: 0
+            }
+
+            const finalBill: Bill = cart.reduce((state: Bill, next: CartItem) => ({
+                totalQty: state.totalQty + next.qty,
+                totalPrice: state.totalPrice + next.qty * next.price
+            }), initialState)
+
+            expect(finalBill.totalPrice).toBe(28.2);
+            expect(finalBill.totalQty).toBe(6);
+        });
+
+    });
+    it('practice 2', () => {
+        interface BowlingGame {
+            playerName: string;
+            score: number;
+        }
+
+        const scores: BowlingGame[] = [
+            { playerName: 'Jeff', score: 122 },
+            { playerName: 'Henry', score: 227 },
+            { playerName: 'Stacey', score: 212 },
+            { playerName: 'Violet', score: 118 }
+        ]
+
+        interface Results {
+            highScore: number;
+            highScorer: string;
+            lowScore: number;
+            lowScorer: string;
+        }
+
+        // Your Code Here
+        const initialState: Results = {
+            highScore: -1,
+            highScorer: null,
+            lowScore: 301,
+            lowScorer: null
+        }
+
+        const answer: Results = scores.reduce((state: Results, next: BowlingGame) => ({
+            highScore: next.score > state.highScore ? next.score : state.highScore,
+            highScorer: next.score > state.highScore ? next.playerName : state.highScorer,
+            lowScore: next.score < state.lowScore ? next.score : state.lowScore,
+            lowScorer: next.score < state.lowScore ? next.playerName : state.lowScorer
+        } as Results), initialState)
+
+        expect(answer.highScore).toBe(227);
+        expect(answer.highScorer).toBe('Henry');
+        expect(answer.lowScore).toBe(118);
+        expect(answer.lowScorer).toBe('Violet');
+
+        /*
+            const scores: BowlingGame[] = [
+            { playerName: 'Jeff', score: 122 },
+            { playerName: 'Henry', score: 227 },
+            { playerName: 'Stacey', score: 212 },
+            { playerName: 'Violet', score: 118 }
+        ]
+        */
+        const expected = ['Henry Got 227', 'Stacey Got 212'];
+
+        // your code here.
+        const playersOver200 = scores // Four BowlingGame elements (BowlingGame[].length === 4)
+            .filter(game => game.score >= 200) // Two BowlingGame elements (BowlingGame[].length === 2)
+            .map(game => `${game.playerName} Got ${game.score}`); // Two strings (string[].length === 2)
+
+        expect(playersOver200).toEqual(expected);
+        const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        const summary = numbers.map(theNumber => isEven(theNumber) ? 'Even' : 'Odd')
+        expect(summary).toEqual(['Odd', 'Even', 'Odd', 'Even', 'Odd', 'Even', 'Odd', 'Even', 'Odd'])
+    });
+
+});
 
 // TODO:
-// Fix that IsEven thing (make a module)
-// Do a couple of examples of combining together operators (map, filter, reduce, etc.)
 // Do a little more with classes and
 // Modules:
 //   Barrels
